@@ -12,14 +12,17 @@ The client sends messages to the server, which converts them to pig latin, and t
 
 ### Program Invocation
 To run the starting code you may run:
+
 `python server.py 5000`
 and
 `python client.py localhost 5000`
+
 in separate terminal windows. Be sure to start the server ﬁrst, to allow it to start listening on a socket, and start the client soon after, before the server times out.
 
 ### What to Submit
 You will submit different versions of **rdt.py**, which implements the send and receive functions for RDT 2.1, and RDT 3.0. RDT 2.1 tolerates corrupted packets through retransmission. RDT 3.0 tolerates corrupted and lost packets through retransmission. The necessary functions prototypes are already included in **rdt.py**. For the purposes of testing you may modify **client.py** and **server.py** to use these functions instead of those of RDT 1.0. You will also submit a link to a YouTube video showing an execution of your code for each version of the protocol.
-\tWe will grade the this assignment as follows:
+
+We will grade the this assignment as follows:
 1. [2 points] partners.txt with your partner’s, or partners’ ﬁrst and last name.
 2. [10 points] rdt 2 1.py, client 2 1.py, server 2 1.py, network 2 1.py that correctly implement RDT 2.1 and a link to a YouTube video showing the execution of your program
 3. [13 points] rdt 3 0.py, client 3 0.py, server 3 0.py, network 3 0.py that correctly implement RDT 3.0 and a link to a YouTube video showing the execution of your program
