@@ -15,13 +15,14 @@ class Packet:
         self.msg_S = msg_S
         # since checksum is implicit, no checksum field here
 
-    def from_byte_S(self, byte_S):
+    @classmethod
+    def from_byte_S(byte_S):
         if Packet.corrupt(byte_S):
             raise RuntimeError('Cannot initialize Packet: byte_S is corrupt')
         #extract the fields
         seq_num = int(byte_S[Packet.length_S_length : Packet.length_S_length+Packet.seq_num_S_length])
         msg_S = byte_S[Packet.length_S_length+Packet.seq_num_S_length+Packet.checksum_length :]
-        return self(seq_num, msg_S)
+        return Packet(seq_num, msg_S)
 
     def get_byte_S(self):
         #convert sequence number of a byte field of seq_num_S_length bytes
@@ -34,6 +35,7 @@ class Packet:
         #compile into a string
         return length_S + seq_num_S + checksum_S + self.msg_S
 
+    @staticmethod
     def corrupt(byte_S):
         #extract the fields
         length_S = byte_S[0:Packet.length_S_length]
