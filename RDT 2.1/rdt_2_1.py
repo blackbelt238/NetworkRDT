@@ -24,7 +24,7 @@ class Packet:
         msg_S = byte_S[Packet.length_S_length+Packet.seq_num_S_length+Packet.checksum_length :]
         return self(seq_num, msg_S)
 
-    def get_byte_S():
+    def get_byte_S(self):
         #convert sequence number of a byte field of seq_num_S_length bytes
         seq_num_S = str(self.seq_num).zfill(self.seq_num_S_length)
         #convert length to a byte field of length_S_length bytes
