@@ -16,7 +16,7 @@ class Packet:
         # since checksum is implicit, no checksum field here
 
     @classmethod
-    def from_byte_S(byte_S):
+    def from_byte_S(self, byte_S):
         if Packet.corrupt(byte_S):
             raise RuntimeError('Cannot initialize Packet: byte_S is corrupt')
         #extract the fields
@@ -63,21 +63,21 @@ class RDT:
     ## buffer of bytes read from network
     byte_buffer = ''
 
-    def __init__(role_S, server_S, port):
-        self.network = Network.NetworkLayer(role_S, server_S, port)
+    def __init__(self, role_S, server_S, port):
+        self.network = network_2_1.NetworkLayer(role_S, server_S, port)
 
     @classmethod
-    def disconnect():
+    def disconnect(self):
         self.network.disconnect()
 
     @classmethod
-    def rdt_1_0_send(msg_S):
+    def rdt_1_0_send(self, msg_S):
         p = Packet(self.seq_num, msg_S)
         self.seq_num += 1
         self.network.udt_send(p.get_byte_S())
 
     @classmethod
-    def rdt_1_0_receive():
+    def rdt_1_0_receive(self):
         ret_S = None
         byte_S = self.network.udt_receive()
         self.byte_buffer += byte_S
@@ -99,7 +99,7 @@ class RDT:
 
     # sends a packet based on the RDT 2.1 protocol
     @classmethod
-    def rdt_2_1_send(msg_S):
+    def rdt_2_1_send(self, msg_S):
         # create the packet and perform the initial send
         p = Packet(self.seq_num, msg_S)
         self.network.udt_send(p.get_byte_S())
@@ -120,7 +120,7 @@ class RDT:
 
     # recieves a packet based on the RDT 2.1 protocol
     @classmethod
-    def rdt_2_1_receive():
+    def rdt_2_1_receive(self):
         ret_S = None
         byte_S = self.network.udt_receive()
         self.byte_buffer += byte_S
