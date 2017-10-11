@@ -1,5 +1,5 @@
 import argparse
-import RDT
+import rdt_2_1
 import time
 
 if __name__ == '__main__':
@@ -7,7 +7,7 @@ if __name__ == '__main__':
     parser.add_argument('server', help='Server.')
     parser.add_argument('port', help='Port.', type=int)
     args = parser.parse_args()
-    
+
     msg_L = ['The use of COBOL cripples the mind; its teaching should, therefore, be regarded as a criminal offense. -- Edsgar Dijkstra',
             'C makes it easy to shoot yourself in the foot; C++ makes it harder, but when you do, it blows away your whole leg. -- Bjarne Stroustrup',
             'A mathematician is a device for turning coffee into theorems. -- Paul Erdos',

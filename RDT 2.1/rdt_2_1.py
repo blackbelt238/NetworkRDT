@@ -1,4 +1,4 @@
-import Network
+import network_2_1
 import argparse
 from time import sleep
 import hashlib
@@ -93,7 +93,7 @@ class RDT:
     def rdt_2_1_send(self, msg_S):
         pass
 
-    # recieves a packet based on the RDT 2.1 protocol    
+    # recieves a packet based on the RDT 2.1 protocol
     def rdt_2_1_receive(self):
         pass
 
