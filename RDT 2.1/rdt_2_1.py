@@ -107,7 +107,7 @@ class RDT:
         cur_seq = self.seq_num
         while(cur_seq >= self.seq_num):
             print("waiting...")
-            recieved_str = rdt_2_1_receive()
+            recieved_str = self.rdt_2_1_receive()
 
             # continue on if a positive acknowledgement is recieved
             if Packet.isACK(recieved_str):
