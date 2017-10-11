@@ -15,7 +15,6 @@ class Packet:
         self.msg_S = msg_S
         # since checksum is implicit, no checksum field here
 
-    @classmethod
     def from_byte_S(self, byte_S):
         if Packet.corrupt(byte_S):
             raise RuntimeError('Cannot initialize Packet: byte_S is corrupt')
@@ -35,7 +34,6 @@ class Packet:
         #compile into a string
         return length_S + seq_num_S + checksum_S + self.msg_S
 
-    @staticmethod
     def corrupt(byte_S):
         #extract the fields
         length_S = byte_S[0:Packet.length_S_length]
@@ -49,11 +47,9 @@ class Packet:
         #and check if the same
         return checksum_S != computed_checksum_S
 
-    @staticmethod
     def isACK(msg):
         return msg == "ACK"
 
-    @staticmethod
     def isNAK(msg):
         return msg == "NAK"
 
@@ -66,17 +62,14 @@ class RDT:
     def __init__(self, role_S, server_S, port):
         self.network = network_2_1.NetworkLayer(role_S, server_S, port)
 
-    @classmethod
     def disconnect(self):
         self.network.disconnect()
 
-    @classmethod
     def rdt_1_0_send(self, msg_S):
         p = Packet(self.seq_num, msg_S)
         self.seq_num += 1
         self.network.udt_send(p.get_byte_S())
 
-    @classmethod
     def rdt_1_0_receive(self):
         ret_S = None
         byte_S = self.network.udt_receive()
@@ -98,7 +91,6 @@ class RDT:
             #if this was the last packet, will return on the next iteration
 
     # sends a packet based on the RDT 2.1 protocol
-    @classmethod
     def rdt_2_1_send(self, msg_S):
         # create the packet and perform the initial send
         p = Packet(self.seq_num, msg_S)
@@ -119,7 +111,6 @@ class RDT:
                 self.network.udt_send(p.get_byte_S())
 
     # recieves a packet based on the RDT 2.1 protocol
-    @classmethod
     def rdt_2_1_receive(self):
         ret_S = None
         byte_S = self.network.udt_receive()
@@ -138,6 +129,7 @@ class RDT:
 
             # if a recieved packet has been corrupted, attempt to collect packets
             if Packet.corrupt(p.get_byte_S):
+                print("Sending NAK")
                 self.rdt_2_1_send("NAK")
                 self.byte_buffer = ""
                 return None
@@ -167,7 +159,6 @@ if __name__ == '__main__':
         sleep(2)
         print(rdt.rdt_1_0_receive())
         rdt.disconnect()
-
 
     else:
         sleep(1)

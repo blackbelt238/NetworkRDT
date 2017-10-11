@@ -48,6 +48,7 @@ if __name__ == '__main__':
         time_of_last_data = time.time()
 
         #convert and reply
+        print("Sending ACK")
         rdt.rdt_2_1_send("ACK")
         rep_msg_S = piglatinize(msg_S)
         print('Converted %s \nto %s\n' % (msg_S, rep_msg_S))
