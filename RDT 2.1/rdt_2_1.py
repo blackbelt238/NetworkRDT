@@ -16,7 +16,7 @@ class Packet:
         # since checksum is implicit, no checksum field here
 
     @classmethod
-    def from_byte_S(byte_S):
+    def from_byte_S(self, byte_S):
         if Packet.corrupt(byte_S):
             raise RuntimeError('Cannot initialize Packet: byte_S is corrupt')
         #extract the fields
@@ -100,7 +100,7 @@ class RDT:
 
         cur_seq = self.seq_num
         while(cur_seq >= self.seq_num):
-            print("waiting...")
+            #print("waiting...")
             recieved_str = self.rdt_2_1_receive()
 
             # continue on if a positive acknowledgement is recieved
