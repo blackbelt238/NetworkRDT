@@ -130,7 +130,7 @@ class RDT:
             p = Packet.from_byte_S(self.byte_buffer[0:length])
 
             # if a recieved packet has been corrupted, attempt to collect packets
-            if Packet.corrupt(p.get_byte_S):
+            if Packet.corrupt(p.get_byte_S()):
                 print("Sending NAK")
                 self.rdt_2_1_send("NAK")
                 self.byte_buffer = ""
