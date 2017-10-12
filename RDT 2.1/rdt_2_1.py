@@ -103,14 +103,22 @@ class RDT:
             recieved_byte_str = ''
             while(recieved_byte_str == ''):
                 recieved_byte_str = self.network.udt_receive()
-                
+
             length = int(recieved_byte_str[:Packet.length_S_length])
             # remove the packet bytes from the buffer
             self.byte_buffer = recieved_byte_str[length:]
+
+            # resend if a corrupt packet is recieved
+            if Packet.corrupt(recieved_byte_str[:length]):
+                # print("corrupt")
+                self.byte_buffer = ''
+                continue
+
             pRec = Packet.from_byte_S(recieved_byte_str[:length])
 
-            # resend if a corrupt pakcet or a negative acknowledgement is recieved
-            if Packet.corrupt(pRec.get_byte_S()) or Packet.isNAK(pRec.msg_S):
+            # resend if a negative acknowledgement is recieved
+            if Packet.isNAK(pRec.msg_S):
+                # print("NAK recieved")
                 self.byte_buffer = ''
             # continue on if a positive acknowledgement is recieved
             elif Packet.isACK(pRec.msg_S):
