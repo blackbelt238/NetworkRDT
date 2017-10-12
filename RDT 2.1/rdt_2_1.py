@@ -57,7 +57,7 @@ class Packet:
 
 class RDT:
     ## latest sequence number used in a packet
-    seq_num = 1
+    seq_num = 0
     ## buffer of bytes read from network
     byte_buffer = ''
 
@@ -109,14 +109,15 @@ class RDT:
             #remove the packet bytes from the buffer
             self.byte_buffer = recieved_byte_str[length:]
             pRec = Packet.from_byte_S(recieved_byte_str[:length])
+
+            # resend if a negative acknowledgement is recieved
+            if Packet.corrupt(pRec.msg_S) or Packet.isNAK(pRec.msg_S):
+                # print("NAK recieved. Resending...")
+                self.byte_buffer = ''
             # continue on if a positive acknowledgement is recieved
-            if Packet.isACK(pRec.msg_S):
+            elif Packet.isACK(pRec.msg_S):
                 #print("ACK recieved")
                 self.seq_num += 1
-            # resend if a negative acknowledgement is recieved
-            elif Packet.isNAK(pRec.msg_S):
-                #print("NAK recieved. Resending...")
-                self.byte_buffer = ''
 
     # recieves a packet based on the RDT 2.1 protocol
     def rdt_2_1_receive(self):
