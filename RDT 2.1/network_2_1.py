@@ -4,6 +4,7 @@ import threading
 from time import sleep
 import random
 import rdt_2_1
+import timeit
 
 
 
@@ -11,7 +12,7 @@ import rdt_2_1
 class NetworkLayer:
     #configuration parameters
     prob_pkt_loss = 0
-    prob_byte_corr = .2
+    prob_byte_corr = 0
     prob_pkt_reorder = 0
 
     #class variables
@@ -59,6 +60,7 @@ class NetworkLayer:
     def udt_send(self, msg_S):
         #return without sending if the packet is being dropped
         if random.random() < self.prob_pkt_loss:
+            print("Dropping")
             return
         #corrupt a packet
         if random.random() < self.prob_byte_corr:
