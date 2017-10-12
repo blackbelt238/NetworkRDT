@@ -31,7 +31,7 @@ if __name__ == '__main__':
     parser.add_argument('port', help='Port.', type=int)
     args = parser.parse_args()
 
-    timeout = 5 #close connection if no new data within 5 seconds
+    timeout = 10 #close connection if no new data within 5 seconds
     time_of_last_data = time.time()
 
     rdt = rdt_2_1.RDT('server', None, args.port)
@@ -49,8 +49,6 @@ if __name__ == '__main__':
         time_of_last_data = time.time()
 
         #convert and reply
-        print("Sending ACK")
-        rdt.rdt_3_0_send("ACK")
         rep_msg_S = piglatinize(msg_S)
         print('Converted %s \nto %s\n' % (msg_S, rep_msg_S))
         rdt.rdt_3_0_send(rep_msg_S)
