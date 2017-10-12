@@ -1,11 +1,11 @@
 import argparse
-import rdt_2_1
+import RDT
 import time
 
 
 def makePigLatin(word):
     m  = len(word)
-    vowels = "a", "e", "i", "o", "u", "y"
+    vowels = "a", "e", "i", "o", "u", "y" 
     if m<3 or word=="the":
         return word
     else:
@@ -13,12 +13,11 @@ def makePigLatin(word):
             if word.find(i) < m and word.find(i) != -1:
                 m = word.find(i)
         if m==0:
-            return word+"way"
+            return word+"way" 
         else:
-            return word[m:]+word[:m]+"ay"
+            return word[m:]+word[:m]+"ay" 
 
 def piglatinize(message):
-    #print("got here")
     essagemay = ""
     message = message.strip(".")
     for word in message.split(' '):
@@ -30,29 +29,28 @@ if __name__ == '__main__':
     parser =  argparse.ArgumentParser(description='Pig Latin conversion server.')
     parser.add_argument('port', help='Port.', type=int)
     args = parser.parse_args()
-
+    
     timeout = 5 #close connection if no new data within 5 seconds
     time_of_last_data = time.time()
-
-    rdt = rdt_2_1.RDT('server', None, args.port)
-    #print(rdt.network)
+    
+    rdt = RDT.RDT('server', None, args.port)
     while(True):
-        #try to receive a message before timeout
-        msg_S = rdt.rdt_3_0_receive()
+        #try to receiver message before timeout
+        msg_S = rdt.rdt_1_0_receive()
         if msg_S is None:
-            # if the server has timed out, stop listening for packets and quit server
             if time_of_last_data + timeout < time.time():
                 break
-            # if the server has not timed out, continue listening
             else:
                 continue
         time_of_last_data = time.time()
-
+        
         #convert and reply
-        print("Sending ACK")
-        rdt.rdt_3_0_send("ACK")
         rep_msg_S = piglatinize(msg_S)
         print('Converted %s \nto %s\n' % (msg_S, rep_msg_S))
-        rdt.rdt_3_0_send(rep_msg_S)
-
+        rdt.rdt_1_0_send(rep_msg_S)
+        
     rdt.disconnect()
+
+    
+    
+    
