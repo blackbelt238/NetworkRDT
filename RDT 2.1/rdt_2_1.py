@@ -138,19 +138,20 @@ class RDT:
             length = int(self.byte_buffer[:Packet.length_S_length])
             if len(self.byte_buffer) < length:
                 return ret_S #not enough bytes to read the whole packet
-            #create packet from buffer content and add to return string
-            p = Packet.from_byte_S(self.byte_buffer[0:length])
 
-            # if a recieved packet has been corrupted, attempt to collect packets
-            if Packet.corrupt(p.get_byte_S()):
-                #print("Sending NAK")
+            # if a recieved packet has been corrupted, reset and re-request
+            if Packet.corrupt(self.byte_buffer[0:length]):
+                print("Sending NAK")
                 pak = Packet(self.seq_num, "NAK")
                 self.network.udt_send(pak.get_byte_S())
                 self.byte_buffer = ""
                 return None
-            else:
-                pak = Packet(self.seq_num, "ACK")
-                self.network.udt_send(pak.get_byte_S())
+
+            #create packet from buffer content and add to return string
+            p = Packet.from_byte_S(self.byte_buffer[0:length])
+
+            pak = Packet(self.seq_num, "ACK")
+            self.network.udt_send(pak.get_byte_S())
 
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
             #remove the packet bytes from the buffer
