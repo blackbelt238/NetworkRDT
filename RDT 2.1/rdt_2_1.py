@@ -111,11 +111,11 @@ class RDT:
             pRec = Packet.from_byte_S(recieved_byte_str[:length])
             # continue on if a positive acknowledgement is recieved
             if Packet.isACK(pRec.msg_S):
-                print("ACK recieved")
+                #print("ACK recieved")
                 self.seq_num += 1
             # resend if a negative acknowledgement is recieved
             elif Packet.isNAK(pRec.msg_S):
-                print("NAK recieved. Resending...")
+                #print("NAK recieved. Resending...")
                 self.byte_buffer = ''
 
     # recieves a packet based on the RDT 2.1 protocol
@@ -137,14 +137,14 @@ class RDT:
 
             # if a recieved packet has been corrupted, attempt to collect packets
             if Packet.corrupt(p.get_byte_S()):
-                print("Sending NAK")
+                #print("Sending NAK")
                 pak = Packet(self.seq_num, "NAK")
                 self.network.udt_send(pak.get_byte_S())
                 self.byte_buffer = ""
                 return None
             else:
                 pak = Packet(self.seq_num, "ACK")
-                self.network.udt_send(pak.get_byte_S())              
+                self.network.udt_send(pak.get_byte_S())
 
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
             #remove the packet bytes from the buffer

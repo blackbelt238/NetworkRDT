@@ -18,7 +18,7 @@ def makePigLatin(word):
             return word[m:]+word[:m]+"ay"
 
 def piglatinize(message):
-    print("got here")
+    #print("got here")
     essagemay = ""
     message = message.strip(".")
     for word in message.split(' '):
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     time_of_last_data = time.time()
 
     rdt = rdt_2_1.RDT('server', None, args.port)
-    print(rdt.network)
+    #print(rdt.network)
     while(True):
         #try to receive a message before timeout
         msg_S = rdt.rdt_2_1_receive()
