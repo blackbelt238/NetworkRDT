@@ -96,21 +96,27 @@ class RDT:
     def rdt_2_1_send(self, msg_S):
         # create the packet and perform the initial send
         p = Packet(self.seq_num, msg_S)
-        self.network.udt_send(p.get_byte_S())
 
         cur_seq = self.seq_num
         while(cur_seq >= self.seq_num):
+            self.network.udt_send(p.get_byte_S())
             #print("waiting...")
-            recieved_str = self.rdt_2_1_receive()
-
+            recieved_byte_str = ''
+            while(recieved_byte_str == ''):
+                recieved_byte_str = self.network.udt_receive()
+            #self.byte_buffer += recieved_byte_str
+            length = int(recieved_byte_str[:Packet.length_S_length])
+            #remove the packet bytes from the buffer
+            self.byte_buffer = recieved_byte_str[length:]
+            pRec = Packet.from_byte_S(recieved_byte_str[:length])
             # continue on if a positive acknowledgement is recieved
-            if Packet.isACK(recieved_str):
+            if Packet.isACK(pRec.msg_S):
                 print("ACK recieved")
                 self.seq_num += 1
             # resend if a negative acknowledgement is recieved
-            elif Packet.isNAK(recieved_str):
+            elif Packet.isNAK(pRec.msg_S):
                 print("NAK recieved. Resending...")
-                self.network.udt_send(p.get_byte_S())
+                self.byte_buffer = ''
 
     # recieves a packet based on the RDT 2.1 protocol
     def rdt_2_1_receive(self):
@@ -132,9 +138,13 @@ class RDT:
             # if a recieved packet has been corrupted, attempt to collect packets
             if Packet.corrupt(p.get_byte_S()):
                 print("Sending NAK")
-                self.rdt_2_1_send("NAK")
+                pak = Packet(self.seq_num, "NAK")
+                self.network.udt_send(pak.get_byte_S())
                 self.byte_buffer = ""
                 return None
+            else:
+                pak = Packet(self.seq_num, "ACK")
+                self.network.udt_send(pak.get_byte_S())              
 
             ret_S = p.msg_S if (ret_S is None) else ret_S + p.msg_S
             #remove the packet bytes from the buffer
@@ -157,13 +167,13 @@ if __name__ == '__main__':
 
     rdt = RDT(args.role, args.server, args.port)
     if args.role == 'client':
-        rdt.rdt_1_0_send('MSG_FROM_CLIENT')
+        rdt.rdt_2_1_send('MSG_FROM_CLIENT')
         sleep(2)
-        print(rdt.rdt_1_0_receive())
+        print(rdt.rdt_2_1_receive())
         rdt.disconnect()
 
     else:
         sleep(1)
-        print(rdt.rdt_1_0_receive())
-        rdt.rdt_1_0_send('MSG_FROM_SERVER')
+        print(rdt.rdt_2_1_receive())
+        rdt.rdt_2_1_send('MSG_FROM_SERVER')
         rdt.disconnect()

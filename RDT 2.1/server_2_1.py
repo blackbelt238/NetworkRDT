@@ -18,6 +18,7 @@ def makePigLatin(word):
             return word[m:]+word[:m]+"ay"
 
 def piglatinize(message):
+    print("got here")
     essagemay = ""
     message = message.strip(".")
     for word in message.split(' '):
@@ -48,8 +49,6 @@ if __name__ == '__main__':
         time_of_last_data = time.time()
 
         #convert and reply
-        print("Sending ACK")
-        rdt.rdt_2_1_send("ACK")
         rep_msg_S = piglatinize(msg_S)
         print('Converted %s \nto %s\n' % (msg_S, rep_msg_S))
         rdt.rdt_2_1_send(rep_msg_S)
